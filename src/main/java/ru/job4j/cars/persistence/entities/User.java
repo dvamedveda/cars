@@ -4,13 +4,14 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Сущность Пользователь.
  */
 @Entity
 @Table(name = "users")
-public class User {
+public class User implements IEntity {
 
     /**
      * Идентификатор пользователя.
@@ -35,7 +36,7 @@ public class User {
     /**
      * Список объявлений пользователя.
      */
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<Advert> adverts = new ArrayList<>();
 
     public User() {
@@ -76,5 +77,33 @@ public class User {
 
     public List<Advert> getAdverts() {
         return this.adverts;
+    }
+
+    @Override
+    public String toString() {
+        return "User{"
+                + "id=" + id
+                + ", name='" + name + '\''
+                + ", created=" + created
+                + '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        User user = (User) o;
+        return id == user.id
+                && Objects.equals(name, user.name)
+                && Objects.equals(created.getTime(), user.created.getTime());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, created.getTime());
     }
 }

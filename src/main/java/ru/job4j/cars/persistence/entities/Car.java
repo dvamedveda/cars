@@ -2,13 +2,14 @@ package ru.job4j.cars.persistence.entities;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.Objects;
 
 /**
  * Сущность Автомобиль.
  */
 @Entity
 @Table(name = "car")
-public class Car {
+public class Car implements IEntity {
 
     /**
      * Идентификатор автомобиля.
@@ -90,5 +91,37 @@ public class Car {
 
     public void setProduced(Date produced) {
         this.produced = produced;
+    }
+
+    @Override
+    public String toString() {
+        return "Car{"
+                + "id=" + id
+                + ", brand='" + brand + '\''
+                + ", model='" + model + '\''
+                + ", body='" + body + '\''
+                + ", produced=" + produced
+                + '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Car car = (Car) o;
+        return id == car.id
+                && Objects.equals(brand, car.brand)
+                && Objects.equals(model, car.model)
+                && Objects.equals(body, car.body)
+                && Objects.equals(produced.getTime(), car.produced.getTime());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, brand, model, body, produced.getTime());
     }
 }

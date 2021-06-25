@@ -1,13 +1,14 @@
 package ru.job4j.cars.persistence.entities;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 /**
  * Сущность Фото для автомобиля.
  */
 @Entity
 @Table(name = "photo")
-public class Photo {
+public class Photo implements IEntity {
 
     /**
      * Идентификатор
@@ -31,7 +32,7 @@ public class Photo {
     /**
      * Объявление, которому принадлежит фото.
      */
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "advert_id")
     private Advert advert;
 
@@ -74,5 +75,34 @@ public class Photo {
 
     public void setAdvert(Advert advert) {
         this.advert = advert;
+    }
+
+    @Override
+    public String toString() {
+        return "Photo{"
+                + "id=" + id
+                + ", name='" + name + '\''
+                + ", data='" + data + '\''
+                + '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Photo photo = (Photo) o;
+        return id == photo.id
+                && Objects.equals(name, photo.name)
+                && Objects.equals(data, photo.data)
+                && Objects.equals(advert, photo.advert);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, data, advert);
     }
 }
