@@ -1,5 +1,7 @@
 package ru.job4j.cars.persistence.entities;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Date;
@@ -23,8 +25,14 @@ public class User implements IEntity {
     /**
      * Имя пользователя.
      */
-    @Column(unique = true)
+    @Column
     private String name;
+
+    @Column(unique = true)
+    private String email;
+
+    @Column
+    private String password;
 
     /**
      * Дата создания пользователя.
@@ -37,14 +45,17 @@ public class User implements IEntity {
      * Список объявлений пользователя.
      */
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    @JsonManagedReference
     private List<Advert> adverts = new ArrayList<>();
 
     public User() {
     }
 
-    public User(String name, Date created) {
+    public User(String name, String email, String password) {
         this.name = name;
-        this.created = created;
+        this.email = email;
+        this.password = password;
+        this.created = new Date(System.currentTimeMillis());
     }
 
     public int getId() {
@@ -61,6 +72,22 @@ public class User implements IEntity {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public Date getCreated() {
@@ -84,6 +111,7 @@ public class User implements IEntity {
         return "User{"
                 + "id=" + id
                 + ", name='" + name + '\''
+                + ", email='" + email + '\''
                 + ", created=" + created
                 + '}';
     }
@@ -99,11 +127,12 @@ public class User implements IEntity {
         User user = (User) o;
         return id == user.id
                 && Objects.equals(name, user.name)
+                && Objects.equals(email, user.email)
                 && Objects.equals(created.getTime(), user.created.getTime());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, created.getTime());
+        return Objects.hash(id, name, email, created.getTime());
     }
 }

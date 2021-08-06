@@ -1,5 +1,7 @@
 package ru.job4j.cars.persistence.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import javax.persistence.*;
 import java.util.Objects;
 
@@ -27,19 +29,20 @@ public class Photo implements IEntity {
      * Данные фото.
      */
     @Column
-    private String data;
+    private byte[] data;
 
     /**
      * Объявление, которому принадлежит фото.
      */
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "advert_id")
+    @JsonBackReference
     private Advert advert;
 
     public Photo() {
     }
 
-    public Photo(String name, String data, Advert advert) {
+    public Photo(String name, byte[] data, Advert advert) {
         this.name = name;
         this.data = data;
         this.advert = advert;
@@ -61,11 +64,11 @@ public class Photo implements IEntity {
         this.name = name;
     }
 
-    public String getData() {
+    public byte[] getData() {
         return data;
     }
 
-    public void setData(String data) {
+    public void setData(byte[] data) {
         this.data = data;
     }
 
@@ -82,7 +85,6 @@ public class Photo implements IEntity {
         return "Photo{"
                 + "id=" + id
                 + ", name='" + name + '\''
-                + ", data='" + data + '\''
                 + '}';
     }
 
@@ -97,12 +99,11 @@ public class Photo implements IEntity {
         Photo photo = (Photo) o;
         return id == photo.id
                 && Objects.equals(name, photo.name)
-                && Objects.equals(data, photo.data)
                 && Objects.equals(advert, photo.advert);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, data, advert);
+        return Objects.hash(id, name, advert);
     }
 }

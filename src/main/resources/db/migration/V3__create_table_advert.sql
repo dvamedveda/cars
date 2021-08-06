@@ -7,7 +7,8 @@ create table advert
     closed      boolean,
     users_id    integer references users (id),
     car_id      integer unique references car (id),
-    createdOn  timestamp,
-    closedOn   timestamp,
+    createdOn   timestamp,
+    closedOn    timestamp,
+    published   boolean default false,
     price       integer
 )

@@ -6,7 +6,7 @@
         <Console name="stdout">
             <Layout type="PatternLayout" pattern="%d %p %c{1} [%t] %m%n"/>
         </Console>
-        <RollingFile name="rollingFile" fileName="logs/todo.log"
+        <RollingFile name="rollingFile" fileName="logs/cars.log"
                      filePattern="logs/$${date:yyyy-MM}/app-%d{MM-dd-yyyy}-%i.log.gz">
             <PatternLayout>
                 <Pattern>%d %p %c{1} [%t] %m%n</Pattern>

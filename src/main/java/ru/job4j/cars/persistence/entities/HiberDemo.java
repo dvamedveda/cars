@@ -22,7 +22,7 @@ public class HiberDemo {
             Session session = sessionFactory.openSession();
             session.beginTransaction();
 
-            User user = new User("Boris", new Date(System.currentTimeMillis()));
+            User user = new User("Boris", "email", "password");
             session.save(user);
             Date produced = Date.from(new Date(System.currentTimeMillis()).toInstant().minusSeconds(YEAR * 10));
             Car car1 = new Car("Honda", "Civic", "Sedan", produced);
@@ -41,8 +41,8 @@ public class HiberDemo {
                     user, car2, now, 9999);
             session.save(advert1);
             session.save(advert2);
-            Photo photoOne = new Photo("photo name 1", "some data for 1", advert1);
-            Photo photoTwo = new Photo("photo name 2", "some data for 2", advert1);
+            Photo photoOne = new Photo("photo name 1", new byte[1], advert1);
+            Photo photoTwo = new Photo("photo name 2", new byte[1], advert1);
             advert1.addPhoto(photoOne);
             advert1.addPhoto(photoTwo);
             session.save(advert1);

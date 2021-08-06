@@ -1,5 +1,8 @@
 package ru.job4j.cars.persistence.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Date;
@@ -43,6 +46,7 @@ public class Advert implements IEntity {
      */
     @ManyToOne
     @JoinColumn(name = "users_id")
+    @JsonBackReference
     private User user;
 
     /**
@@ -66,6 +70,9 @@ public class Advert implements IEntity {
     @Temporal(TemporalType.TIMESTAMP)
     private Date closedOn;
 
+    @Column
+    private boolean published;
+
     /**
      * Цена автомобиля в объявлении.
      */
@@ -76,6 +83,7 @@ public class Advert implements IEntity {
      * Список фото, принадлежащих объявлению.
      */
     @OneToMany(mappedBy = "advert", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonManagedReference
     private List<Photo> photos = new ArrayList<>();
 
     public Advert() {
@@ -90,6 +98,7 @@ public class Advert implements IEntity {
         this.car = car;
         this.createdOn = createdOn;
         this.closedOn = new Date(0);
+        this.published = false;
         this.price = price;
     }
 
@@ -157,6 +166,14 @@ public class Advert implements IEntity {
         this.closedOn = closedOn;
     }
 
+    public boolean isPublished() {
+        return published;
+    }
+
+    public void setPublished(boolean published) {
+        this.published = published;
+    }
+
     public int getPrice() {
         return price;
     }
@@ -184,6 +201,7 @@ public class Advert implements IEntity {
                 + ", car=" + car
                 + ", createdOn=" + createdOn
                 + ", closedOn=" + closedOn
+                + ", published=" + published
                 + ", price=" + price
                 + '}';
     }
@@ -205,11 +223,12 @@ public class Advert implements IEntity {
                 && Objects.equals(user, advert.user)
                 && Objects.equals(car, advert.car)
                 && Objects.equals(createdOn.getTime(), advert.createdOn.getTime())
-                && Objects.equals(closedOn.getTime(), advert.closedOn.getTime());
+                && Objects.equals(closedOn.getTime(), advert.closedOn.getTime())
+                && Objects.equals(published, advert.published);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, summary, description, closed, user, car, createdOn.getTime(), closedOn.getTime(), price);
+        return Objects.hash(id, summary, description, closed, user, car, createdOn.getTime(), closedOn.getTime(), published, price);
     }
 }

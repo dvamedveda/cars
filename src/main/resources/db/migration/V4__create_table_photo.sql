@@ -3,6 +3,6 @@ create table photo
 (
     id        serial not null primary key,
     name      text,
-    data      text,
+    data      bytea,
     advert_id integer references advert (id)
 )

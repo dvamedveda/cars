@@ -1,7 +1,9 @@
 -- Создание таблицы users
 create table users
 (
-    id      serial not null primary key,
-    name    text unique,
-    created timestamp
+    id       serial not null primary key,
+    name     text,
+    email    text unique,
+    password text,
+    created  timestamp
 )
