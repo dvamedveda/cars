@@ -63,7 +63,6 @@ public class RegServlet extends HttpServlet {
             }
         } catch (UserAlreadyExistException e) {
             LOGGER.warn("New user trying to register with existing email!");
-            LOGGER.warn(e, e);
             req.setAttribute("error", "Пользователь с таким email уже существует!");
             req.getRequestDispatcher("/WEB-INF/views/register.jsp").forward(req, resp);
         }

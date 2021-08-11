@@ -4,20 +4,34 @@ import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * Реализация фильтра для перенаправления неаутентифицированных пользователей
  * на страницу аутентификации.
  */
 public class AuthFilter implements Filter {
+
+    /**
+     * Ресурсы, доступные без авторизации.
+     */
+    private static final Set<String> ALLOWED_URIS = new HashSet<>();
+
+    static {
+        ALLOWED_URIS.add("register.do");
+        ALLOWED_URIS.add("auth.do");
+        ALLOWED_URIS.add("board.do");
+        ALLOWED_URIS.add("search.do");
+        ALLOWED_URIS.add("photo.do");
+    }
+
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         HttpServletResponse response = (HttpServletResponse) servletResponse;
         String uri = request.getRequestURI();
-        if (isUriAllowed(uri)) {
+        String requestedResource = Arrays.stream(uri.split("/")).skip(uri.split("/").length - 1).findFirst().get();
+        if (ALLOWED_URIS.contains(requestedResource)) {
             filterChain.doFilter(servletRequest, servletResponse);
             return;
         }
@@ -36,28 +50,5 @@ public class AuthFilter implements Filter {
     @Override
     public void destroy() {
 
-    }
-
-    /**
-     * Проверяем, находится ли URI в списке доступных без аутентификации.
-     *
-     * @param uri обрабатывающийся в данный момент адрес.
-     * @return результат проверки.
-     */
-    private boolean isUriAllowed(String uri) {
-        List<String> allowedUris = new ArrayList<>();
-        allowedUris.add("register.do");
-        allowedUris.add("auth.do");
-        allowedUris.add("board.do");
-        allowedUris.add("search.do");
-        allowedUris.add("photo.do");
-        boolean result = false;
-        for (String allowedUri : allowedUris) {
-            if (uri.endsWith(allowedUri)) {
-                result = true;
-                break;
-            }
-        }
-        return result;
     }
 }

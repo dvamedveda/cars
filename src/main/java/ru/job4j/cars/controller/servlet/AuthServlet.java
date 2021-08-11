@@ -50,7 +50,6 @@ public class AuthServlet extends HttpServlet {
             }
         } catch (UnexistUserException e) {
             LOGGER.warn("User trying to log in to service with invalid email " + email + ".");
-            LOGGER.warn(e, e);
             errorMessage = "Пользователя с таким email не существует!";
             req.setAttribute("error", errorMessage);
             req.getRequestDispatcher("/WEB-INF/views/login.jsp").forward(req, resp);
